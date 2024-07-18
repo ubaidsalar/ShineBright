@@ -92,11 +92,11 @@ document.getElementById('showLogin').addEventListener('click', () => {
 // Handle authentication state changes
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        if (window.location.pathname !== '/chat.html') {
+        if (window.location.pathname !== 'chat.html') {
             window.location.href = 'chat.html';
         }
     } else {
-        if (window.location.pathname !== '/index.html') {
+        if (window.location.pathname !== 'index.html') {
             window.location.href = 'index.html';
         }
     }
