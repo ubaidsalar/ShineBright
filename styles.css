@@ -1,0 +1,203 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: seashell;
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+}
+
+#auth,
+#chat {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+}
+
+#auth {
+    background: lightblue;
+}
+
+#auth form {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid grey;
+    padding: 20px;
+    border-radius: 0px 50px;
+}
+
+#auth form input {
+    width: 255px;
+}
+
+#auth form input,
+#auth form button {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 14px;
+}
+
+#auth form button {
+    background-color: #007bff;
+    color: white;
+    width: 280px;
+}
+
+#chat {
+    display: flex;
+    flex-direction: column;
+}
+
+#appName {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: #007bff;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    font-size: large;
+    box-shadow: 0 20px 10px rgba(10, 110, 224, 0.2);
+}
+
+#messages {
+    flex: 1;
+    width: 90vw;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    margin-top: 60px;
+}
+
+.message {
+    padding: 8px;
+    margin: 5px 0;
+    max-width: 85vw;
+    word-wrap: break-word;
+    direction: ltr;
+}
+
+.me {
+    padding: 10px;
+    border-radius: 25px 25px 0px 25px;
+    background: #007bff;
+    width: fit-content;
+    max-width: 60vw;
+    color: #fff;
+    align-self: flex-end;
+    margin-left: auto;
+    text-align: center;
+}
+
+.notMe {
+    padding: 10px;
+    border-radius: 25px 25px 25px 0px;
+    background: lightgray;
+    width: fit-content;
+    max-width: 60vw;
+    color: #000;
+    border: 1px solid #ddd;
+    align-self: flex-start;
+    margin-right: auto;
+    text-align: center;
+}
+
+.me-sender {
+    font-weight: bold;
+    text-align: right;
+    position: relative;
+    right: 1%;
+}
+
+.notMe-sender {
+    font-weight: bold;
+}
+.time {
+    font-size: 0.8em;
+    color: #999;
+    display: none;
+    padding-top: 5px;
+}
+
+.me-time {
+    text-align: right;
+    position: relative;
+    right: 1%;
+}
+
+.notMe-time {
+    text-align: left;
+    position: relative;
+    left: 1%;
+}
+
+
+#sendMsg {
+    display: flex;
+    width: 90vw;
+    padding: 10px;
+    background: lightgray;
+    border-top: 3px solid green;
+    border-radius: 10px;
+    margin-bottom: 3px;
+}
+
+#msgTxt {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 10px;
+    resize: vertical;
+    overflow-y: auto;
+    max-height: 3em;
+    white-space: normal;
+}
+
+
+#msgBtn {
+    padding: 10px 20px;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#logoutButton {
+    position: fixed;
+    top: 13px;
+    right: 10px;
+    padding: 10px 20px;
+    background: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.deleteButton {
+    display: none;
+    position: relative;
+    align-self: center;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 10px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.message:hover .deleteButton,
+.message:active .deleteButton {
+    display: block;
+}

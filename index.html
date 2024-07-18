@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Gosha-e-Sab Rang Urdu Adab</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="auth" class="active">
+        <h1>Welcome to Gosha-e-Sab Rang Urdu Adab!</h1>
+        <h3>Please login before continuing...</h3>
+        <form id="loginForm">
+            <input type="email" id="loginEmail" placeholder="Email" required>
+            <input type="password" id="loginPassword" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <p>Don't have an account? <a href="#" id="showSignUp">Sign Up</a></p>
+        <form id="signupForm" style="display: none;">
+            <input type="text" id="signupUsername" placeholder="Username" required>
+            <input type="email" id="signupEmail" placeholder="Email" required>
+            <input type="password" id="signupPassword" placeholder="Password" required>
+            <button type="submit">Sign Up</button>
+        </form>
+        <p>Already have an account? <a href="#" id="showLogin" style="display: none;">Login</a></p>
+    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+
+// Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyAlHZu0z6x5x8CxjMAOHkMwnCev6Guz0PM",
+    authDomain: "gosha-e-sab-rang.firebaseapp.com",
+    databaseURL: "https://gosha-e-sab-rang-default-rtdb.firebaseio.com",
+    projectId: "gosha-e-sab-rang",
+    storageBucket: "gosha-e-sab-rang.appspot.com",
+    messagingSenderId: "197747509966",
+    appId: "1:197747509966:web:8389098d0fe92c5ccf5e9f"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth();
+
+// Login form submission
+document.getElementById('loginForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+            window.location.href = "chat.html";
+        })
+        .catch(error => {
+            console.error('Login error:', error);
+        });
+});
+
+// Signup form submission
+document.getElementById('signupForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('signupEmail').value;
+    const password = document.getElementById('signupPassword').value;
+
+    createUserWithEmailAndPassword(auth, email, password)
+        .then(() => {
+            window.location.href = "chat.html";
+        })
+        .catch(error => {
+            console.error('Signup error:', error);
+        });
+});
+
+// Show signup form
+document.getElementById('showSignUp').addEventListener('click', () => {
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('signupForm').style.display = 'block';
+    document.getElementById('showSignUp').style.display = 'none';
+    document.getElementById('showLogin').style.display = 'block';
+});
+
+// Show login form
+document.getElementById('showLogin').addEventListener('click', () => {
+    document.getElementById('signupForm').style.display = 'none';
+    document.getElementById('loginForm').style.display = 'block';
+    document.getElementById('showLogin').style.display = 'none';
+    document.getElementById('showSignUp').style.display = 'block';
+});
+
+// Handle authentication state changes
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        if (window.location.pathname !== '/chat.html') {
+            window.location.href = 'chat.html';
+        }
+    } else {
+        if (window.location.pathname !== '/index.html') {
+            window.location.href = 'index.html';
+        }
+    }
+});
+
+    </script>
+</body>
+</html>

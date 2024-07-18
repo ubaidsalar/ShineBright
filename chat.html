@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Gosha-e-Sab Rang Urdu Adab</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="chat">
+        <div id="appName">Gosha-e-Sab Rang Urdu Adab
+            <button id="logoutButton">Logout</button>
+        </div>
+        <div id="messages"></div>
+        <div id="sendMsg">
+            <input type="text" id="msgTxt" placeholder="Enter your message...">
+            <button id="msgBtn">Send</button>
+        </div>
+    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+        import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+        import { getDatabase, ref, set, push, onChildAdded, onChildRemoved, remove } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAlHZu0z6x5x8CxjMAOHkMwnCev6Guz0PM",
+            authDomain: "gosha-e-sab-rang.firebaseapp.com",
+            databaseURL: "https://gosha-e-sab-rang-default-rtdb.firebaseio.com",
+            projectId: "gosha-e-sab-rang",
+            storageBucket: "gosha-e-sab-rang.appspot.com",
+            messagingSenderId: "197747509966",
+            appId: "1:197747509966:web:8389098d0fe92c5ccf5e9f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const db = getDatabase(app);
+
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            signOut(auth).then(() => {
+                window.location.href = "index.html";
+            }).catch(error => {
+                console.error('Error signing out:', error);
+            });
+        });
+
+        document.getElementById('msgBtn').addEventListener('click', sendMessage);
+        document.getElementById('msgTxt').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            const msgTxt = document.getElementById('msgTxt');
+            const msg = msgTxt.value.trim();
+            if (msg === '') {
+                alert('Message cannot be empty');
+                return;
+            }
+
+            const user = auth.currentUser;
+            const timestamp = new Date().getTime();
+
+            if (user) {
+                push(ref(db, "messages"), {
+                    msg: msg,
+                    sender: user.email,
+                    timestamp: timestamp
+                }).then(() => {
+                    msgTxt.value = '';
+                }).catch(error => {
+                    console.error('Error sending message:', error);
+                });
+            } else {
+                console.warn('No user signed in');
+            }
+        }
+
+        onChildAdded(ref(db, "messages"), (data) => {
+            const messageData = data.val();
+            displayMessage(data.key, messageData.msg, messageData.sender, messageData.timestamp);
+        });
+
+        onChildRemoved(ref(db, "messages"), (data) => {
+            const msgBox = document.getElementById(data.key);
+            if (msgBox) {
+                msgBox.remove();
+            }
+        });
+
+    function displayMessage(key, msg, sender, timestamp) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message';
+        messageDiv.id = key;
+
+        const senderDiv = document.createElement('div');
+        senderDiv.className = sender === auth.currentUser.email ? 'sender me-sender' : 'sender notMe-sender'
+        senderDiv.textContent = sender === auth.currentUser.email ? 'You' : sender;
+
+        const msgDiv = document.createElement('div');
+        msgDiv.className = sender === auth.currentUser.email ? 'me' : 'notMe';
+        msgDiv.textContent = msg;
+
+        const timeDiv = document.createElement('div');
+        timeDiv.className = sender === auth.currentUser.email ? 'time me-time' : 'time notMe-time';
+        const time = new Date(timestamp);
+        timeDiv.textContent = time.toLocaleTimeString();
+
+        msgDiv.addEventListener('click', () => {
+            timeDiv.style.display = 'block';
+            setTimeout(() => {
+                timeDiv.style.display = 'none';
+            }, 3000);
+        });
+
+        messageDiv.appendChild(senderDiv);
+        messageDiv.appendChild(msgDiv);
+        messageDiv.appendChild(timeDiv);
+
+        if (sender === auth.currentUser.email) {
+    const deleteButton = document.createElement('button');
+    deleteButton.className = 'deleteButton';
+    deleteButton.textContent = 'Delete';
+    deleteButton.addEventListener('click', () => {
+        remove(ref(db, "messages/" + key)).catch(error => {
+            console.error('Error deleting message:', error);
+        });
+    });
+    msgDiv.appendChild(deleteButton);
+
+    // Function to handle showing and hiding delete button
+    const toggleDeleteButton = () => {
+        deleteButton.style.display = 'block';
+        setTimeout(() => {
+            deleteButton.style.display = 'none';
+        }, 3000);
+    };
+
+    // Event listeners for showing delete button
+    msgDiv.addEventListener('mouseenter', toggleDeleteButton);
+    msgDiv.addEventListener('mouseleave', () => {
+        deleteButton.style.display = 'none';
+    });
+}
+
+        document.getElementById('messages').appendChild(messageDiv);
+        document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+    }
+
+    </script>
+</body>
+</html>
